@@ -4,12 +4,15 @@ import { Disclosure} from '@headlessui/react'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
 import { motion, useReducedMotion, Variants } from "framer-motion"
 import Link from 'next/link'
+import { useSession, signIn, signOut } from 'next-auth/react'
 
 function classNames(...classes:any) {
   return classes.filter(Boolean).join(' ')
 };
 
 export default function Navigation() {
+  const { data: session, status } = useSession();
+  const loading = status === 'loading'
   const shouldReduceMotion = useReducedMotion()
 
   const animation: Variants = shouldReduceMotion ? {
@@ -54,9 +57,8 @@ export default function Navigation() {
 
     const { asPath } = useRouter()
     const navigation = [
-        { name: 'Booking', href: '/booking', current: asPath === '/booking' ? true : false },
+        { name: 'Events', href: '/booking', current: asPath === '/booking' ? true : false },
         { name: 'Information', href: '/information', current: asPath === '/information' ? true : false },
-        { name: 'User', href: '/user', current: asPath === '/user' ? true : false },
       ]
   return (
     <Disclosure as="nav" className="bg-gray-900">
@@ -100,6 +102,42 @@ export default function Navigation() {
                         {item.name}
                       </motion.a>
                     ))}
+                    {
+                      loading ? (<></>) : (
+                        session ? 
+                        (
+                          <><motion.a
+                              href="/user"
+                              className="text-gray-300 hover:bg-lime-500 hover:text-black px-3 py-2 rounded-md text-sm font-medium"
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.9 }}
+                              variants={animationItem}
+                            >
+                              Min bruger
+                            </motion.a><motion.a
+                              onClick={() => signOut()}
+                              className="text-gray-300 hover:bg-lime-500 hover:text-black px-3 py-2 rounded-md text-sm font-medium border border-gray-600"
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.9 }}
+                              variants={animationItem}
+                            >
+                                Log ud
+                              </motion.a></>
+                        )
+                        :
+                        (
+                          <motion.a
+                        href="/api/auth/signin"
+                        className="text-gray-300 hover:bg-lime-500 hover:text-black px-3 py-2 rounded-md text-sm font-medium"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.9 }}
+                        variants={animationItem}
+                      >
+                        Log ind
+                      </motion.a>
+                        )
+                      )
+                    }
                   </div>
                 </div>
               </div>
@@ -124,6 +162,42 @@ export default function Navigation() {
                   {item.name}
                 </motion.a>
               ))}
+              {
+                      loading ? (<></>) : (
+                        session ? 
+                        (
+                          <><motion.a
+                              href="/user"
+                              className="text-gray-300 hover:bg-lime-500 hover:text-black block px-3 py-2 rounded-md text-base font-medium text-center"
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.9 }}
+                              variants={animationItem}
+                            >
+                              Min bruger
+                            </motion.a><motion.a
+                              onClick={() => signOut()}
+                              className="text-gray-300 hover:bg-lime-500 hover:text-black block px-3 py-2 rounded-md text-base font-medium text-center border border-gray-600"
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.9 }}
+                              variants={animationItem}
+                            >
+                                Log ud
+                              </motion.a></>
+                        )
+                        :
+                        (
+                          <motion.a
+                        href="/api/auth/signin"
+                        className="text-gray-300 hover:bg-lime-500 hover:text-black block px-3 py-2 rounded-md text-base font-medium text-center"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.9 }}
+                        variants={animationItem}
+                      >
+                        Log ind
+                      </motion.a>
+                        )
+                      )
+                    }
             </motion.div>
           </Disclosure.Panel>
         </>

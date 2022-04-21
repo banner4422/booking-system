@@ -2,6 +2,8 @@ import { ISeat, ITable } from '../interfaces/interfaces';
 import Table from '../components/booking/table';
 import { Popover } from '@headlessui/react';
 import { ChatIcon, UsersIcon, FireIcon, CogIcon } from '@heroicons/react/outline';
+import { signOut, useSession } from "next-auth/react"
+import Link from 'next/link';
 
 const features = [
   {
@@ -31,6 +33,8 @@ const features = [
 ]
 
 export default function Home() {
+  const { data: session, status } = useSession();
+  const loading = status === 'loading'
   return (
     <div>
     <div className="relative bg-gray-800 overflow-hidden">
@@ -76,30 +80,42 @@ export default function Home() {
                 <span className="block xl:inline">Booking System</span>{' '}
                 <span className="block text-lime-500 xl:inline">Dplan</span>
               </h1>
-              <p className="mt-3 text-base text-gray-400 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-              Description here kdfasklfdklsfklfksllk
-              </p>
-              <p className="mt-3 text-base text-white sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-              Description here kdfasklfdklsfklfksllk
-              </p>
+              {session ?
+              <><p className="mt-3 text-base text-gray-400 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
+                    Velkommen {session.user?.name}
+                  </p>
+              </>
+              : 
+              <><p className="mt-3 text-base text-gray-400 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
+                    Description here kdfasklfdklsfklfksllk
+                  </p><p className="mt-3 text-base text-white sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
+                      Description here kdfasklfdklsfklfksllk
+                    </p></>
+              }
               <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                 {/* manipulate buttons according to login state or admin, perhaps same for descriptions */}
+              {loading ? (<></>) : (session ? 
+              <>
               <div className="rounded-md shadow">
-                  <a
-                    href=""
-                    className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-black bg-lime-300 hover:bg-lime-400 hover:text-black md:py-4 md:text-lg md:px-10"
-                  >
-                    Placeholder
-                  </a>
-              </div>
-              <div className="mt-3 sm:mt-0 sm:ml-3 shadow-lg">
-                <a
-                  href="/commands"
-                  className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-black bg-lime-300 hover:bg-lime-400 md:py-4 md:text-lg md:px-10"
-                >
-                  Placeholder
-                </a>
-              </div>
+                      <a
+                        href=""
+                        className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-black bg-lime-300 hover:bg-lime-400 hover:text-black md:py-4 md:text-lg md:px-10"
+                      >
+                        Tjek næste event
+                      </a>
+                    </div><div className="mt-3 sm:mt-0 sm:ml-3 shadow-lg">
+                      <Link href="/api/auth/signin">
+                        <a
+                          className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-black bg-lime-300 hover:bg-lime-400 md:py-4 md:text-lg md:px-10"
+                        >
+                          FILL
+                        </a>
+                        </Link>
+                      </div>
+              </>
+              :
+              <></>
+              )}
               </div>
             </div>
           </main>
