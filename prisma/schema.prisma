@@ -1,27 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider        = "prisma-client-js"
-}
-
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -40,7 +39,11 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  role          String    @default(dbgenerated("USER"))
   accounts      Account[]
+  Admin         Admin?
+  Order         Order[]
+  Seat          Seat[]
   sessions      Session[]
 }
 
@@ -50,4 +53,58 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Admin {
+  id           String  @id(map: "admin_pk") @unique(map: "admin_id_uindex")
+  userId       String  @unique(map: "admin_userid_uindex")
+  manageSeats  Boolean
+  manageEvents Boolean
+  manageUsers  Boolean
+  User         User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "admin_user_id_fk")
+}
+
+model Event {
+  id          String   @id(map: "event_pk") @unique(map: "event_id_uindex")
+  name        String
+  dateStart   DateTime
+  dateEnd     DateTime
+  image       String?
+  description String?
+  Order       Order?
+  Seat        Seat[]
+  Table       Table[]
+}
+
+model Seat {
+  id          String  @id(map: "seat_pk") @unique(map: "seat_id_uindex")
+  tableId     String
+  eventId     String
+  userId      String
+  description String?
+  name        String
+  occupied    Boolean @default(false)
+  Event       Event   @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "seat_event_id_fk")
+  Table       Table   @relation(fields: [tableId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "seat_table_id_fk")
+  User        User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "seat_user_id_fk")
+  Order       Order?
+}
+
+model Table {
+  id          String  @id(map: "tables_pk") @unique(map: "tables_id_uindex")
+  eventId     String
+  name        String
+  description String?
+  Event       Event   @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "table_event_id_fk")
+  Seat        Seat[]
+}
+
+model Order {
+  id      String @id(map: "order_pk") @unique(map: "order_id_uindex")
+  seatId  String @unique(map: "order_seatid_uindex")
+  eventId String @unique(map: "order_eventid_uindex")
+  userId  String
+  Event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "order_event_id_fk")
+  Seat    Seat   @relation(fields: [seatId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "order_seat_id_fk")
+  User    User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "order_user_id_fk")
 }

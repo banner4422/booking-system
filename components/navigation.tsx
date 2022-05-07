@@ -108,7 +108,10 @@ export default function Navigation() {
                         (
                           <><motion.a
                               href="/user"
-                              className="text-gray-300 hover:bg-lime-500 hover:text-black px-3 py-2 rounded-md text-sm font-medium"
+                              className={classNames(
+                          asPath === '/user' ? 'bg-lime-500 text-black' : 'text-gray-300 hover:bg-lime-500 hover:text-black',
+                          'px-3 py-2 rounded-md text-sm font-medium'
+                        )}
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.9 }}
                               variants={animationItem}

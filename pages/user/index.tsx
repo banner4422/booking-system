@@ -1,5 +1,6 @@
 import { motion, Variants } from "framer-motion"
-import { useSession } from "next-auth/react";
+import { NextPageContext } from "next";
+import { getSession, useSession } from "next-auth/react";
 
 const animation: Variants = {
   hidden: { opacity: 0 },
@@ -37,4 +38,21 @@ export default function User() {
         </div>
       </div>
     )
+}
+
+export async function getServerSideProps(context: NextPageContext) {
+  const session = await getSession(context)
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/api/auth/signin',
+        permanent: false,
+      },
+    }
+  }
+
+  return {
+    props: { session }
+  }
 }
