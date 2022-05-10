@@ -39,20 +39,3 @@ export default function User() {
       </div>
     )
 }
-
-export async function getServerSideProps(context: NextPageContext) {
-  const session = await getSession(context)
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/api/auth/signin',
-        permanent: false,
-      },
-    }
-  }
-
-  return {
-    props: { session }
-  }
-}
