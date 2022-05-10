@@ -1,5 +1,6 @@
 import { motion, Variants } from "framer-motion"
-import { useSession } from "next-auth/react";
+import { NextPageContext } from "next";
+import { getSession, useSession } from "next-auth/react";
 
 const animation: Variants = {
   hidden: { opacity: 0 },
