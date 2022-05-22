@@ -1,24 +1,18 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import { PrismaClient } from "@prisma/client"
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import FacebookProvider from "next-auth/providers/facebook"
 import CredentialsProvider from "next-auth/providers/credentials"
 import Credentials from "next-auth/providers/credentials"
+import { prisma } from "../../../utils/prisma"
 
-const prisma = new PrismaClient();
-/*
-prisma.seat.findMany({
-  include: {
-    User: true
-  }
-})
-*/
+
 export default NextAuth({
   adapter: PrismaAdapter(prisma),
   // https://next-auth.js.org/configuration/providers/oauth
   debug: true,
   providers: [
+    /*
     FacebookProvider({
       clientId: process.env.FACEBOOK_ID,
       clientSecret: process.env.FACEBOOK_SECRET,
@@ -27,6 +21,7 @@ export default NextAuth({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET,
     }),
+    */
     CredentialsProvider({
       // The name to display on the sign in form (e.g. "Sign in with...")
       name: "Credentials",
@@ -69,7 +64,6 @@ export default NextAuth({
         token.userRole = "admin"
         return token
       }
-
       return token;
     },
     async redirect({ url, baseUrl }) {

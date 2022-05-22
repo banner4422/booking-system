@@ -57,7 +57,7 @@ export default function Navigation() {
 
     const { asPath } = useRouter()
     const navigation = [
-        { name: 'Events', href: '/booking', current: asPath === '/booking' ? true : false },
+        { name: 'Begivenheder', href: '/events', current: asPath === '/events' ? true : false },
         { name: 'Information', href: '/information', current: asPath === '/information' ? true : false },
       ]
   return (
