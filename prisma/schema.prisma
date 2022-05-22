@@ -32,6 +32,8 @@ model Event {
   dateEnd     DateTime
   image       String?       @db.VarChar
   description String?       @db.VarChar
+  map         String?       @db.VarChar
+  address     String?       @db.VarChar
   Order       Order?
   Participant Participant[]
   Seat        Seat[]
