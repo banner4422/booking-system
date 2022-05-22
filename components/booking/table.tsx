@@ -1,8 +1,6 @@
 import React from "react";
-import { Rnd } from "react-rnd";
 import { ISeat, ITable } from "../../interfaces/interfaces";
 import Seat from "./seat";
-import * as d3 from "d3";
 /*
 const style = {
     display: "flex",
@@ -20,8 +18,8 @@ interface items {
     key: number
 }
 
-export default function Table({items, key}: items) {
-    
+export default function Table({ items, key }: items) {
+
     return (
         <React.Fragment>
             {/*

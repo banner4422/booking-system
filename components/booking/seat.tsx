@@ -1,5 +1,4 @@
 import React, { CSSProperties } from "react";
-import { Rnd } from "react-rnd";
 import { ISeat, ITable } from "../../interfaces/interfaces";
 /*
 const style = {
@@ -24,18 +23,18 @@ interface seatData {
 }
 
 export default function Seat({ id, tableId, x, y, width, height, name, description, reserved, key }: seatData) {
-    
+
     return (
         <React.Fragment>
-            {reserved ? 
-            // style={{'transform': `translateX(calc(100px))`}}
-            <div className="bg-red-500 w-12 h-12 rounded-full border-2 border-black" style={{'transform': 'translate(-65px, -170%)'}}>
-                <p className="text-black">{name} {id}</p>
-            </div> 
-            : 
-            <div className="bg-green-500 w-12 h-12 rounded-full border-2 border-black" style={{'transform': 'translate(-65px, -170%)'}}>
-                <p className="text-black">{name} {id}</p>
-            </div>}
+            {reserved ?
+                // style={{'transform': `translateX(calc(100px))`}}
+                <div className="bg-red-500 w-12 h-12 rounded-full border-2 border-black" style={{ 'transform': 'translate(-65px, -170%)' }}>
+                    <p className="text-black">{name} {id}</p>
+                </div>
+                :
+                <div className="bg-green-500 w-12 h-12 rounded-full border-2 border-black" style={{ 'transform': 'translate(-65px, -170%)' }}>
+                    <p className="text-black">{name} {id}</p>
+                </div>}
         </React.Fragment>
     )
 }
