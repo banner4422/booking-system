@@ -8,12 +8,11 @@ datasource db {
 }
 
 model User {
-  id       String  @id @default(cuid()) @db.VarChar
-  name     String? @db.VarChar
-  email    String? @unique @db.VarChar
-  password String? @db.VarChar
-  Admin    Admin?
-  Order    Order[]
+  id          String        @id @default(cuid()) @db.VarChar
+  email       String?       @unique @db.VarChar
+  password    String?       @db.VarChar
+  Admin       Admin?
+  Participant Participant[]
 }
 
 model Admin {
@@ -26,63 +25,53 @@ model Admin {
 }
 
 model Event {
-  id          String        @id(map: "event_pk") @unique(map: "event_id_uindex") @db.VarChar
-  name        String        @db.VarChar
+  id          String   @id(map: "event_pk") @unique(map: "event_id_uindex") @db.VarChar
+  name        String   @db.VarChar
   dateStart   DateTime
   dateEnd     DateTime
-  image       String?       @db.VarChar
-  description String?       @db.VarChar
-  map         String?       @db.VarChar
-  address     String?       @db.VarChar
+  image       String?  @db.VarChar
+  description String?  @db.VarChar
+  map         String?  @db.VarChar
+  address     String?  @db.VarChar
   Order       Order?
-  Participant Participant[]
   Seat        Seat[]
   Table       Table[]
 }
 
 model Seat {
-  id          String        @id(map: "seat_pk") @unique(map: "seat_id_uindex") @db.VarChar
-  tableId     String        @db.VarChar
-  eventId     String        @db.VarChar
-  description String?       @db.VarChar
-  name        String        @db.VarChar
-  occupied    Boolean       @default(false)
-  Event       Event         @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "seat_event_id_fk")
-  Table       Table         @relation(fields: [tableId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "seat_table_id_fk")
-  Order       Order?
-  Participant Participant[]
+  id       String  @id(map: "seat_pk") @unique(map: "seat_id_uindex") @db.VarChar
+  tableId  String  @db.VarChar
+  eventId  String  @db.VarChar
+  name     String  @db.VarChar
+  occupied Boolean @default(false)
+  Event    Event   @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "seat_event_id_fk")
+  Table    Table   @relation(fields: [tableId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "seat_table_id_fk")
+  Order    Order?
 }
 
 model Table {
-  id          String        @id(map: "tables_pk") @unique(map: "tables_id_uindex") @db.VarChar
-  eventId     String        @db.VarChar
-  name        String        @db.VarChar
-  description String?       @db.VarChar
-  Event       Event         @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "table_event_id_fk")
-  Participant Participant[]
-  Seat        Seat[]
+  id      String @id(map: "tables_pk") @unique(map: "tables_id_uindex") @db.VarChar
+  eventId String @db.VarChar
+  name    String @db.VarChar
+  Event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "table_event_id_fk")
+  Seat    Seat[]
 }
 
 model Order {
-  id          String       @id(map: "order_pk") @unique(map: "order_id_uindex") @db.VarChar
-  seatId      String       @unique(map: "order_seatid_uindex") @db.VarChar
-  eventId     String       @unique(map: "order_eventid_uindex") @db.VarChar
-  userId      String?      @db.VarChar
-  Event       Event        @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "order_event_id_fk")
-  Seat        Seat         @relation(fields: [seatId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "order_seat_id_fk")
-  User        User?        @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "order_user_id_fk")
-  Participant Participant?
+  id            String      @id(map: "order_pk") @unique(map: "order_id_uindex") @db.VarChar
+  seatId        String      @unique(map: "order_seatid_uindex") @db.VarChar
+  eventId       String      @unique(map: "order_eventid_uindex") @db.VarChar
+  participantId String      @db.VarChar
+  Event         Event       @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "order_event_id_fk")
+  Participant   Participant @relation(fields: [participantId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "order_participant_id_fk")
+  Seat          Seat        @relation(fields: [seatId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "order_seat_id_fk")
 }
 
 model Participant {
-  id      String @id(map: "participant_pk") @unique(map: "participant_id_uindex") @db.VarChar
-  eventId String @db.VarChar
-  tableId String @db.VarChar
-  seatId  String @db.VarChar
-  orderId String @unique(map: "participant_orderid_uindex") @db.VarChar
-  name    String @db.VarChar
-  Event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "participant_event_id_fk")
-  Order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "participant_order_id_fk")
-  Seat    Seat   @relation(fields: [seatId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "participant_seat_id_fk")
-  Table   Table  @relation(fields: [tableId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "participant_table_id_fk")
+  id          String  @id(map: "participant_pk") @unique(map: "participant_id_uindex") @db.VarChar
+  name        String  @db.VarChar
+  phoneNumber Int
+  userId      String  @db.VarChar
+  User        User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "participant_user_id_fk")
+  Order       Order[]
 }
