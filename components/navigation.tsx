@@ -1,12 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 import { useRouter } from 'next/router'
-import { Disclosure} from '@headlessui/react'
+import { Disclosure } from '@headlessui/react'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
 import { motion, useReducedMotion, Variants } from "framer-motion"
 import Link from 'next/link'
 import { useSession, signIn, signOut } from 'next-auth/react'
 
-function classNames(...classes:any) {
+function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ')
 };
 
@@ -18,21 +18,21 @@ export default function Navigation() {
   const animation: Variants = shouldReduceMotion ? {
     hidden: { opacity: 0 },
     show: {
-        opacity: 1,
-        transition: {
-          duration: 0.3,
-        }
+      opacity: 1,
+      transition: {
+        duration: 0.3,
+      }
     },
   } : {
     hidden: { opacity: 0 },
     show: {
-        opacity: 1,
-        transition: {
-            staggerChildren: 0.1
-        }
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
     },
   }
-  
+
   const animationItem: Variants = shouldReduceMotion ? {
     hidden: {
       opacity: 0,
@@ -55,11 +55,11 @@ export default function Navigation() {
     }
   }
 
-    const { asPath } = useRouter()
-    const navigation = [
-        { name: 'Begivenheder', href: '/events', current: asPath === '/events' ? true : false },
-        { name: 'Information', href: '/information', current: asPath === '/information' ? true : false },
-      ]
+  const { asPath } = useRouter()
+  const navigation = [
+    { name: 'Begivenheder', href: '/events', current: asPath === '/events' ? true : false },
+    { name: 'Information', href: '/information', current: asPath === '/information' ? true : false },
+  ]
   return (
     <Disclosure as="nav" className="bg-gray-900">
       {({ open }) => (
@@ -79,10 +79,10 @@ export default function Navigation() {
               </div>
               <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex-shrink-0 flex items-center">
-                <Link href="/" passHref>
+                  <Link href="/" passHref>
                     <motion.img src='/logo.png' width={30} height={30} alt='lol' whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.9 }}/>
-                </Link>
+                      whileTap={{ scale: 0.9 }} />
+                  </Link>
                 </div>
                 <div className="hidden sm:block sm:ml-6">
                   <div className="flex space-x-4">
@@ -104,14 +104,14 @@ export default function Navigation() {
                     ))}
                     {
                       loading ? (<></>) : (
-                        session ? 
-                        (
-                          <><motion.a
+                        session ?
+                          (
+                            <><motion.a
                               href="/user"
                               className={classNames(
-                          asPath === '/user' ? 'bg-lime-500 text-black' : 'text-gray-300 hover:bg-lime-500 hover:text-black',
-                          'px-3 py-2 rounded-md text-sm font-medium'
-                        )}
+                                asPath === '/user' ? 'bg-lime-500 text-black' : 'text-gray-300 hover:bg-lime-500 hover:text-black',
+                                'px-3 py-2 rounded-md text-sm font-medium'
+                              )}
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.9 }}
                               variants={animationItem}
@@ -126,19 +126,42 @@ export default function Navigation() {
                             >
                                 Log ud
                               </motion.a></>
-                        )
-                        :
-                        (
-                          <motion.a
-                        href="/api/auth/signin"
-                        className="text-gray-300 hover:bg-lime-500 hover:text-black px-3 py-2 rounded-md text-sm font-medium"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.9 }}
-                        variants={animationItem}
-                      >
-                        Log ind
-                      </motion.a>
-                        )
+                          )
+                          :
+                          (
+                            <motion.a
+                              href="/api/auth/signin"
+                              className="text-gray-300 hover:bg-lime-500 hover:text-black px-3 py-2 rounded-md text-sm font-medium"
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.9 }}
+                              variants={animationItem}
+                            >
+                              Log ind
+                            </motion.a>
+                          )
+                      )
+                    }
+                    {
+                      loading ? (<></>) : (
+                        session?.user?.name === 'bob' ?
+                          (
+                            <><motion.a
+                              href="/admin"
+                              className={classNames(
+                                asPath === '/user' ? 'bg-lime-500 text-black' : 'text-gray-300 hover:bg-lime-500 hover:text-black',
+                                'px-3 py-2 rounded-md text-sm font-medium'
+                              )}
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.9 }}
+                              variants={animationItem}
+                            >
+                              Admin
+                            </motion.a></>
+                          )
+                          :
+                          (
+                            <></>
+                          )
                       )
                     }
                   </div>
@@ -159,37 +182,37 @@ export default function Navigation() {
                   )}
                   aria-current={item.current ? 'page' : undefined}
                   whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.9 }}
-                        variants={animationItem}
+                  whileTap={{ scale: 0.9 }}
+                  variants={animationItem}
                 >
                   {item.name}
                 </motion.a>
               ))}
               {
-                      loading ? (<></>) : (
-                        session ? 
-                        (
-                          <><motion.a
-                              href="/user"
-                              className="text-gray-300 hover:bg-lime-500 hover:text-black block px-3 py-2 rounded-md text-base font-medium text-center"
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.9 }}
-                              variants={animationItem}
-                            >
-                              Min bruger
-                            </motion.a><motion.a
-                              onClick={() => signOut()}
-                              className="text-gray-300 hover:bg-lime-500 hover:text-black block px-3 py-2 rounded-md text-base font-medium text-center border border-gray-600"
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.9 }}
-                              variants={animationItem}
-                            >
-                                Log ud
-                              </motion.a></>
-                        )
-                        :
-                        (
-                          <motion.a
+                loading ? (<></>) : (
+                  session ?
+                    (
+                      <><motion.a
+                        href="/user"
+                        className="text-gray-300 hover:bg-lime-500 hover:text-black block px-3 py-2 rounded-md text-base font-medium text-center"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.9 }}
+                        variants={animationItem}
+                      >
+                        Min bruger
+                      </motion.a><motion.a
+                        onClick={() => signOut()}
+                        className="text-gray-300 hover:bg-lime-500 hover:text-black block px-3 py-2 rounded-md text-base font-medium text-center border border-gray-600"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.9 }}
+                        variants={animationItem}
+                      >
+                          Log ud
+                        </motion.a></>
+                    )
+                    :
+                    (
+                      <motion.a
                         href="/api/auth/signin"
                         className="text-gray-300 hover:bg-lime-500 hover:text-black block px-3 py-2 rounded-md text-base font-medium text-center"
                         whileHover={{ scale: 1.05 }}
@@ -198,14 +221,14 @@ export default function Navigation() {
                       >
                         Log ind
                       </motion.a>
-                        )
-                      )
-                    }
+                    )
+                )
+              }
             </motion.div>
           </Disclosure.Panel>
         </>
       )}
     </Disclosure>
-    
+
   )
 }

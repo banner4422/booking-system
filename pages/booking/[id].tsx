@@ -9,6 +9,7 @@ import { IEventsDTO } from "../../utils/DTO/eventDTO";
 import { getAllEventsIds } from "../api/events";
 import { getAllSeatsByEvenId } from "../api/seats/[id]";
 import Downshift from "downshift";
+import Link from "next/link";
 
 export const getStaticPaths: GetStaticPaths<{ id: string }> = async () => {
   const eventIds = await getAllEventsIds();
@@ -35,12 +36,29 @@ export const getStaticProps: GetStaticProps = async (context) => {
 export default function Booking({ event, seats }: { event: IEventsDTO, seats: Seat[] }) {
   const [zoomValue, setZoomValue] = useState(1);
   const [seat, setSeat] = useState('');
+  const [name, setName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   console.log(seat)
+  console.log(name)
+  console.log(phoneNumber)
+
+  function onNameChange(e: React.FormEvent<HTMLInputElement>) {
+    setName(e.currentTarget.value);
+  }
+
+  function onPhoneNumberChange(e: React.FormEvent<HTMLInputElement>) {
+    setPhoneNumber(e.currentTarget.value);
+  }
 
   function setSeatValue(id: string) {
     setSeat(id)
   }
-
+  /*
+  async function handleSubmit(event: any) {
+    event.preventDefault();
+    const response = await fetch('/api/')
+  }
+*/
   return (
     <div className="py-6 lg:py-12 bg-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -146,6 +164,41 @@ export default function Booking({ event, seats }: { event: IEventsDTO, seats: Se
                 </div>
               )}
             </Downshift>
+          </div>
+          <div className="m-auto w-1/2 mt-6">
+            <label
+              className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-white sm:text-4xl"
+            >
+              Fulde navn
+            </label>
+            <div className="flex mt-5">
+              <input
+                type='text'
+                placeholder="Skriv dit fulde navn her"
+                className="w-full"
+                value={name}
+                onChange={onNameChange}
+              />
+            </div>
+          </div>
+          <div className="m-auto w-1/2 mt-6">
+            <label
+              className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-white sm:text-4xl"
+            >
+              Telefonnummer
+            </label>
+            <div className="flex mt-5">
+              <input
+                type='text'
+                placeholder="Dit telefonnummer"
+                className="w-full"
+                value={phoneNumber}
+                onChange={onPhoneNumberChange}
+              />
+            </div>
+          </div>
+          <div className="mt-14 text-center">
+            <div className="mt-14 text-center"><Link href="/"><a className="inline-block py-5 px-12 mr-4 bg-lime-500 hover:bg-lime-600 rounded-full text-white font-bold transition duration-200">Tjek alle begivenheder</a></Link></div>
           </div>
         </div>
       </div>
