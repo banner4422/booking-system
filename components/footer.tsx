@@ -8,7 +8,7 @@ export default function Footer() {
                             Dplan
                         </p>
                         <p className="text-sm text-gray-400">
-                            DEMO
+                            Prototype
                         </p>
                     </div>
                     <div className="w-full md:max-w-1/2">
@@ -16,13 +16,13 @@ export default function Footer() {
                             Links
                         </p>
                         <p>
-                        <a
-                            href="https://github.com/banner4422"
-                            className="text-gray-300 hover:text-white"
-                        >
-                            GitHub
-                        </a>
-                        <br/>
+                            <a
+                                href="https://github.com/banner4422/booking-system"
+                                className="text-gray-300 hover:text-white"
+                            >
+                                GitHub
+                            </a>
+                            <br />
                         </p>
                     </div>
                 </div>

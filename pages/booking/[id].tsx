@@ -8,6 +8,7 @@ import { getEvent } from "../api/events/[id]";
 import { IEventsDTO } from "../../utils/DTO/eventDTO";
 import { getAllEventsIds } from "../api/events";
 import { getAllSeatsByEvenId } from "../api/seats/[id]";
+import Downshift from "downshift";
 
 export const getStaticPaths: GetStaticPaths<{ id: string }> = async () => {
   const eventIds = await getAllEventsIds();
@@ -33,6 +34,12 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
 export default function Booking({ event, seats }: { event: IEventsDTO, seats: Seat[] }) {
   const [zoomValue, setZoomValue] = useState(1);
+  const [seat, setSeat] = useState('');
+  console.log(seat)
+
+  function setSeatValue(id: string) {
+    setSeat(id)
+  }
 
   return (
     <div className="py-6 lg:py-12 bg-gray-800">
@@ -49,7 +56,7 @@ export default function Booking({ event, seats }: { event: IEventsDTO, seats: Se
             >Zoom ind
             </a>
             <a onClick={() => setZoomValue(zoomValue - 0.25)}
-              className="inline-block py-5 px-12 mr-4 bg-lime-500 hover:bg-lime-600 rounded-full text-white font-bold transition duration-200 cursor-pointer"
+              className="inline-block mt-4 py-5 px-12 mr-4 bg-lime-500 hover:bg-lime-600 rounded-full text-white font-bold transition duration-200 cursor-pointer"
             >Zoom ud
             </a>
           </div>
@@ -70,7 +77,75 @@ export default function Booking({ event, seats }: { event: IEventsDTO, seats: Se
           </div>
           <br></br>
           <div className='max-w-screen-2xl mx-auto px-3'>
-
+            <Downshift
+              onChange={value => setSeatValue(value.id)}
+              itemToString={item => (item ? `${item.name}` : 'Error')}
+            >
+              {({
+                getInputProps,
+                getItemProps,
+                getLabelProps,
+                getMenuProps,
+                isOpen,
+                inputValue,
+                highlightedIndex,
+                selectedItem,
+                getToggleButtonProps
+              }) => (
+                <div className="m-auto w-full">
+                  <div className="m-auto w-1/2 mt-6">
+                    <label
+                      {...getLabelProps()}
+                      className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-white sm:text-4xl"
+                    >
+                      Vælg et sæde
+                    </label>
+                    <div className="flex mt-5">
+                      <input
+                        placeholder="Vælg et sæde"
+                        className="w-full"
+                        {...getInputProps()}
+                      />
+                      <button
+                        type="button"
+                        className="ml-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:ring-lime-500"
+                        {...getToggleButtonProps()}
+                        aria-label="toggle menu"
+                      >
+                        &#8595;
+                      </button>
+                    </div>
+                    <ul className="rounded bg-gray-100" {...getMenuProps()}>
+                      {isOpen
+                        ? seats
+                          .filter(item => item.occupied === false)
+                          .filter(
+                            item =>
+                              !inputValue ||
+                              item.id.includes(inputValue)
+                          )
+                          .map((item, index) => (
+                            <li
+                              {...getItemProps({
+                                key: item.id,
+                                index,
+                                item,
+                                className: `py-2 px-2 ${highlightedIndex === index
+                                  ? "bg-white font-bold"
+                                  : "bg-gray-100"
+                                  }`
+                              })}
+                              key={index}
+                            >
+                              {item.name}
+                            </li>
+                          ))
+                        : null}
+                    </ul>
+                  </div>
+                </div>
+              )}
+            </Downshift>
           </div>
         </div>
       </div>

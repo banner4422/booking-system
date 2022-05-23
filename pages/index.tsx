@@ -1,5 +1,3 @@
-import { ISeat, ITable } from '../interfaces/interfaces';
-import Table from '../components/booking/table';
 import { Popover } from '@headlessui/react';
 import { ChatIcon, UsersIcon, FireIcon, CogIcon } from '@heroicons/react/outline';
 import { signOut, useSession } from "next-auth/react"
@@ -79,9 +77,9 @@ export default function Home({ events }: { events: IEventsDTO[] }) {
                   </>
                   :
                   <><p className="mt-3 text-base text-gray-400 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                    Description here kdfasklfdklsfklfksllk
+                    Prototype
                   </p><p className="mt-3 text-base text-white sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                      Description here kdfasklfdklsfklfksllk
+                      LAN Party i Dianalund
                     </p></>
                 }
                 <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
