@@ -5,7 +5,7 @@ import FacebookProvider from "next-auth/providers/facebook"
 import CredentialsProvider from "next-auth/providers/credentials"
 import Credentials from "next-auth/providers/credentials"
 import { prisma } from "../../../utils/prisma"
-
+import bcrypt from 'bcryptjs';
 
 export default NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -30,16 +30,21 @@ export default NextAuth({
       // e.g. domain, username, password, 2FA token, etc.
       // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
-        username: { label: "Username", type: "text", placeholder: "" },
+        username: { label: "Email", type: "text", placeholder: "" },
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials, req) {
         // Add logic here to look up the user from the credentials supplied
-        const user = { username: 'bob', password: 'test' }
-
-        if (user.username === credentials?.username && user.password === credentials.password) {
+        const getUser = await prisma.user.findFirst({
+          where: {
+            email: credentials?.username,
+          }
+        })
+        console.log(getUser)
+        const check = await bcrypt.compare(credentials?.password as string, getUser?.password as string);
+        if (getUser && check === true) {
           // Any object returned will be saved in `user` property of the JWT
-          return { id: '1', name: 'bob', email: 'bob@mail.dk' }
+          return { id: getUser.id, name: 'testUser', email: getUser.email }
         } else {
           // If you return null then an error will be displayed advising the user to check their details.
           return null
@@ -58,13 +63,29 @@ export default NextAuth({
     colorScheme: "auto",
   },
   callbacks: {
-    jwt: ({ token, user }) => {
+    jwt: async ({ token, user }) => {
+      const getAdmin = await prisma.admin.findFirst({
+        where: {
+          userId: user?.id
+        }
+      })
       // first time jwt callback is run, user object is available
-      if (user?.id === '1') {
+      if (getAdmin?.userId === user?.id) {
         token.userRole = "admin"
+        token.sub = getAdmin?.userId
         return token
+      } else {
+        return token;
       }
-      return token;
+    },
+    async session({ session, token, user }) {
+      if (token.userRole === 'admin') {
+        session.id = token.sub
+        session.userRole = 'admin'
+      } else {
+        session.id = token.sub
+      }
+      return session
     },
     async redirect({ url, baseUrl }) {
       // Allows relative callback URLs

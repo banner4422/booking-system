@@ -143,7 +143,7 @@ export default function Navigation() {
                     }
                     {
                       loading ? (<></>) : (
-                        session?.user?.name === 'bob' ?
+                        session?.userRole === 'admin' ?
                           (
                             <><motion.a
                               href="/admin"

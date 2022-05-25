@@ -4,6 +4,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { DateTime } from "luxon";
 import { IEventsDTO } from "../../../utils/DTO/eventDTO";
 import { prisma } from "../../../utils/prisma";
+import { getSession } from "next-auth/react";
 
 const secret = process.env.NEXTAUTH_SECRET
 
@@ -28,6 +29,7 @@ async function getAllEventsIdsDatabase() {
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+
     const data = await getAllEventsDatabase();
     res.status(200).json(data);
     res.end();

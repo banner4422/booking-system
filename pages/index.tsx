@@ -70,7 +70,7 @@ export default function Home({ events }: { events: IEventsDTO[] }) {
                 </h1>
                 {session ?
                   <><p className="mt-3 text-base text-gray-400 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                    Velkommen {session.user?.name}
+                    Velkommen {session.user?.name} {session.id}
                     <br />
                     {status}
                   </p>
@@ -93,18 +93,18 @@ export default function Home({ events }: { events: IEventsDTO[] }) {
                         >
                           Tjek næste event
                         </a>
-                      </div><div className="mt-3 sm:mt-0 sm:ml-3 shadow-lg">
-                        <Link href="/api/auth/signin">
-                          <a
-                            className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-black bg-lime-300 hover:bg-lime-400 md:py-4 md:text-lg md:px-10"
-                          >
-                            FILL
-                          </a>
-                        </Link>
                       </div>
                     </>
                     :
-                    <></>
+                    <><div className="rounded-md shadow">
+                      <Link href="/register">
+                        <a
+                          className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-black bg-lime-300 hover:bg-lime-400 md:py-4 md:text-lg md:px-10"
+                        >
+                          Opret en bruger
+                        </a>
+                      </Link>
+                    </div> </>
                   )}
                 </div>
               </div>

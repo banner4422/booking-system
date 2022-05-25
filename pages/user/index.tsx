@@ -1,15 +1,16 @@
 import { motion, Variants } from "framer-motion"
-import { NextPageContext } from "next";
+import { GetStaticProps, NextPageContext } from "next";
 import { getSession, useSession } from "next-auth/react";
+import { getEventsForUser } from "../api/events/[id]";
 
-const animation: Variants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      duration: 2,
-    }
-  },
+export const getStaticProps: GetStaticProps = async (context) => {
+  const eventsData = await getEventsForUser(context.params?.id as string);
+
+  return {
+    props: {
+      events: eventsData
+    }, revalidate: 60 * 60
+  }
 }
 
 export default function User() {
@@ -20,11 +21,10 @@ export default function User() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="lg:text-center text-center overflow-hidden">
           {loading ? (<></>) : (
-            <><motion.p initial="hidden"
-              animate="show"
-              variants={animation} className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-white sm:text-4xl">
+            <><p
+              className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-white sm:text-4xl">
               {session?.user?.name}
-            </motion.p><br></br><div className='max-w-screen-2xl mx-auto px-3'>
+            </p><br></br><div className='max-w-screen-2xl mx-auto px-3'>
                 <p className=" text-white">{session?.user?.email}</p>
               </div></>
           )}
