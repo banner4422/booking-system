@@ -41,13 +41,13 @@ export default function AdminEvent({ event, rows, rows2 }: { event: IEventsDTO, 
                     <br />
                     <div>
                         <TableContainer component={Paper}>
-                            <Table sx={{ minWidth: 650 }} aria-label="simple table" className="bg-gray-900">
+                            <Table sx={{ minWidth: 650 }} aria-label="simple table">
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell className="text-white">Order ID</TableCell>
-                                        <TableCell align="right" className="text-white">Sæde ID</TableCell>
-                                        <TableCell align="right" className="text-white" >Deltager ID</TableCell>
-                                        <TableCell align="right" className="text-white">Event ID</TableCell>
+                                        <TableCell>Order ID</TableCell>
+                                        <TableCell align="right">Sæde ID</TableCell>
+                                        <TableCell align="right">Deltager ID</TableCell>
+                                        <TableCell align="right">Event ID</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -55,14 +55,13 @@ export default function AdminEvent({ event, rows, rows2 }: { event: IEventsDTO, 
                                         <TableRow
                                             key={row.id}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                            className="hover:bg-black"
                                         >
-                                            <TableCell component="th" scope="row" className="text-white">
+                                            <TableCell component="th" scope="row">
                                                 {row.id}
                                             </TableCell>
-                                            <TableCell align="right" className="text-white">{row.seatId}</TableCell>
-                                            <TableCell align="right" className="text-white">{row.participantId}</TableCell>
-                                            <TableCell align="right" className="text-white">{row.eventId}</TableCell>
+                                            <TableCell align="right">{row.seatId}</TableCell>
+                                            <TableCell align="right">{row.participantId}</TableCell>
+                                            <TableCell align="right">{row.eventId}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -71,14 +70,14 @@ export default function AdminEvent({ event, rows, rows2 }: { event: IEventsDTO, 
                     </div>
                     <div className="mt-6">
                         <TableContainer component={Paper}>
-                            <Table sx={{ minWidth: 650 }} aria-label="simple table2" className="bg-gray-900">
+                            <Table sx={{ minWidth: 650 }} aria-label="simple table2">
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell className="text-white">Sæde Navn</TableCell>
-                                        <TableCell className="text-white" align="right">Optaget</TableCell>
-                                        <TableCell className="text-white" align="right">Sæde ID</TableCell>
-                                        <TableCell className="text-white" align="right">Bord ID</TableCell>
-                                        <TableCell className="text-white" align="right">Event ID</TableCell>
+                                        <TableCell>Sæde Navn</TableCell>
+                                        <TableCell align="right">Optaget</TableCell>
+                                        <TableCell align="right">Sæde ID</TableCell>
+                                        <TableCell align="right">Bord ID</TableCell>
+                                        <TableCell align="right">Event ID</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -86,15 +85,14 @@ export default function AdminEvent({ event, rows, rows2 }: { event: IEventsDTO, 
                                         <TableRow
                                             key={row.id}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                            className="hover:bg-black"
                                         >
-                                            <TableCell component="th" scope="row" className="text-white">
+                                            <TableCell component="th" scope="row">
                                                 {row.name}
                                             </TableCell>
-                                            <TableCell className="text-white" align="right">{row.occupied ? 'Optaget' : 'Ledig'}</TableCell>
-                                            <TableCell className="text-white" align="right">{row.id}</TableCell>
-                                            <TableCell className="text-white" align="right">{row.tableId}</TableCell>
-                                            <TableCell className="text-white" align="right">{row.eventId}</TableCell>
+                                            <TableCell align="right">{row.occupied ? 'Optaget' : 'Ledig'}</TableCell>
+                                            <TableCell align="right">{row.id}</TableCell>
+                                            <TableCell align="right">{row.tableId}</TableCell>
+                                            <TableCell align="right">{row.eventId}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
