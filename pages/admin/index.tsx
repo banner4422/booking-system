@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { getSession } from "../../utils/admin";
 import { getAllEventsIds } from "../api/events";
 import { getEvent } from "../api/events/[id]";
-import { getAllSeatsByEvenId } from "../api/seats/[id]";
+import { getAllSeatsByEventId } from "../api/seats/[id]";
 import { useTable } from 'react-table';
 import { getAllSeats } from "../api/seats";
 import { Seat } from "@prisma/client";
