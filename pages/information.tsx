@@ -16,7 +16,7 @@ export default function Information() {
                         Klik her for at læse om dplan
                     </p>
 
-                    <div className=" mt-4 text-center"><Link href="/events"><a className="inline-block py-5 px-12 mr-4 bg-lime-500 hover:bg-lime-600 rounded-full text-white font-bold transition duration-200">dplan</a></Link></div>
+                    <div className=" mt-4 text-center"><Link href="https://dplan.dk/"><a className="inline-block py-5 px-12 mr-4 bg-lime-500 hover:bg-lime-600 rounded-full text-white font-bold transition duration-200">dplan</a></Link></div>
                 </div>
             </div>
         </div>

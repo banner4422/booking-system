@@ -3,8 +3,8 @@ import { getToken } from "next-auth/jwt"
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { IEventsDTO } from "../../../utils/DTO/eventDTO";
 import { DateTime } from "luxon";
-import { prisma } from "../../../utils/prisma";
-import { Event, Seat } from "@prisma/client";
+import prisma from "../../../utils/prisma";
+import { Event, Participant, Seat } from "@prisma/client";
 import { getSession } from "next-auth/react";
 
 const secret = process.env.NEXTAUTH_SECRET
@@ -13,7 +13,7 @@ async function getAllEventsDatabase(id: string) {
     let event = await prisma.event.findUnique({
         where: {
             id: id
-        }
+        },
     })
     let data: IEventsDTO
     if (event) {
@@ -45,6 +45,9 @@ async function getAllSeatsByEventIdDatabase(id: string) {
     let data = await prisma.seat.findMany({
         where: {
             eventId: id
+        },
+        orderBy: {
+            name: 'asc'
         }
     })
     if (data) {
@@ -54,32 +57,50 @@ async function getAllSeatsByEventIdDatabase(id: string) {
     }
 }
 
-async function getEventsForUserDatabase(id: string) {
-    let data = await prisma.participant.findMany({
-        where: {
-            userId: id
-        }
-    })
-    let events: { event: Event, seat: Seat }[] = []
-    if (data) {
-        data.forEach(async element => {
-            let getOrder = await prisma.order.findFirst({
-                where: {
-                    participantId: element.id
-                }
-            })
+async function getUserEventData(participantData: Participant[]): Promise<{
+    event: IEventsDTO;
+    seat: Seat;
+}[]> {
+    let events: { event: IEventsDTO, seat: Seat }[] = []
+    for (let index = 0; index < participantData.length; index++) {
+        const getOrder = await prisma.order.findFirst({
+            where: {
+                participantId: participantData[index].id
+            }
+        })
+        if (getOrder) {
             let getEvent = await prisma.event.findFirst({
                 where: {
-                    id: getOrder?.eventId
+                    id: getOrder.eventId
                 }
             })
-            let getSeat = await prisma.seat.findFirst({
+            const getSeat = await prisma.seat.findFirst({
                 where: {
-                    id: getOrder?.seatId
+                    id: getOrder.seatId
                 }
             })
-            events.push({ event: getEvent as Event, seat: getSeat as Seat })
-        });
+            events.push({
+                event: {
+                    ...getEvent,
+                    dateStart: DateTime.fromJSDate(getEvent!.dateStart).toISO(),
+                    dateEnd: DateTime.fromJSDate(getEvent!.dateEnd).toISO(),
+                } as IEventsDTO, seat: getSeat as Seat
+            })
+        } else {
+            continue
+        }
+    }
+    return events
+}
+
+async function getEventsForUserDatabase(id: string) {
+    const participantData = await prisma.participant.findMany({
+        where: {
+            userId: id
+        },
+    })
+    if (participantData) {
+        const events = await getUserEventData(participantData)
         return events
     } else {
         return null;

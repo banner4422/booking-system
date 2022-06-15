@@ -2,7 +2,7 @@
 import { getToken } from "next-auth/jwt"
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { DateTime } from "luxon";
-import { prisma } from "../../../utils/prisma";
+import prisma from "../../../utils/prisma";
 
 const secret = process.env.NEXTAUTH_SECRET
 

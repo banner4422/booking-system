@@ -4,7 +4,7 @@ import GoogleProvider from "next-auth/providers/google"
 import FacebookProvider from "next-auth/providers/facebook"
 import CredentialsProvider from "next-auth/providers/credentials"
 import Credentials from "next-auth/providers/credentials"
-import { prisma } from "../../../utils/prisma"
+import prisma from "../../../utils/prisma"
 import bcrypt from 'bcryptjs';
 
 export default NextAuth({
@@ -40,7 +40,6 @@ export default NextAuth({
             email: credentials?.username,
           }
         })
-        console.log(getUser)
         const check = await bcrypt.compare(credentials?.password as string, getUser?.password as string);
         if (getUser && check === true) {
           // Any object returned will be saved in `user` property of the JWT

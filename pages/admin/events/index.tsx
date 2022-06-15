@@ -1,8 +1,8 @@
 import { signOut, useSession } from "next-auth/react"
 import EventPost from '../../../components/events/eventPost';
 import { Fragment } from 'react';
-import { GetStaticProps } from 'next';
-import { getAllEvents } from '../../api/events';
+import { GetStaticPaths, GetStaticProps } from 'next';
+import { getAllEvents, getAllEventsIds } from '../../api/events';
 import { IEventsDTO } from '../../../utils/DTO/eventDTO';
 
 export const getStaticProps: GetStaticProps = async () => {
@@ -11,7 +11,7 @@ export const getStaticProps: GetStaticProps = async () => {
     return {
         props: {
             events: eventsData
-        }, revalidate: 60 * 60
+        }, revalidate: 1
     }
 }
 

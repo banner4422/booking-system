@@ -1,5 +1,5 @@
 import { motion, Variants, useTransform } from "framer-motion"
-import { GetStaticPaths, GetStaticProps, NextPageContext } from "next";
+import { GetServerSideProps, GetStaticPaths, GetStaticProps, NextPageContext } from "next";
 import { getSession, useSession } from "next-auth/react";
 import router from "next/router";
 import { useState, useEffect, Fragment, useRef } from "react";
@@ -7,31 +7,21 @@ import { Seat } from '@prisma/client';
 import { getEvent } from "../api/events/[id]";
 import { IEventsDTO } from "../../utils/DTO/eventDTO";
 import { getAllEventsIds } from "../api/events";
-import { getAllSeatsByEvenId } from "../api/seats/[id]";
+import { getAllSeatsByEventId } from "../api/seats/[id]";
 import Downshift from "downshift";
 import Link from "next/link";
 import { getToken } from "next-auth/jwt"
 import { useRouter } from 'next/router'
 
-export const getStaticPaths: GetStaticPaths<{ id: string }> = async () => {
-  const eventIds = await getAllEventsIds();
-
-  const paths = eventIds.map((eventId) => ({
-    params: { id: eventId }
-  }))
-
-  return { paths, fallback: 'blocking' }
-}
-
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const eventData = await getEvent(context.params?.id as string);
-  const seatsData = await getAllSeatsByEvenId(context.params?.id as string)
+  const seatsData = await getAllSeatsByEventId(context.params?.id as string)
 
   return {
     props: {
       eventData: eventData,
       seats: seatsData
-    }, revalidate: 60 * 60
+    }
   }
 }
 
@@ -42,14 +32,14 @@ export default function Booking({ eventData, seats }: { eventData: IEventsDTO, s
   const [zoomValue, setZoomValue] = useState(1);
   const [seat, setSeat] = useState('');
   const [name, setName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState(0);
+  const [phoneNumber, setPhoneNumber] = useState('');
 
   function onNameChange(e: React.FormEvent<HTMLInputElement>) {
     setName(e.currentTarget.value);
   }
 
   function onPhoneNumberChange(e: React.FormEvent<HTMLInputElement>) {
-    setPhoneNumber(parseInt(e.currentTarget.value));
+    setPhoneNumber(e.currentTarget.value);
   }
 
   function setSeatValue(id: string) {
@@ -65,7 +55,7 @@ export default function Booking({ eventData, seats }: { eventData: IEventsDTO, s
       },
       body: JSON.stringify({
         name: name,
-        phoneNumber: phoneNumber,
+        phoneNumber: parseInt(phoneNumber),
         // ts ignore because there's middleware ensuring the session is present
         // but i dunno how to indicate that for typescript rn in this rush
         // @ts-ignore
@@ -212,7 +202,7 @@ export default function Booking({ eventData, seats }: { eventData: IEventsDTO, s
               </label>
               <div className="flex mt-5">
                 <input
-                  type='number'
+                  type='text'
                   placeholder="Dit telefonnummer"
                   className="w-full"
                   value={phoneNumber}

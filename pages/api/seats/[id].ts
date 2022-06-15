@@ -2,7 +2,7 @@
 import { getToken } from "next-auth/jwt"
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { DateTime } from "luxon";
-import { prisma } from "../../../utils/prisma";
+import prisma from "../../../utils/prisma";
 
 const secret = process.env.NEXTAUTH_SECRET
 
@@ -10,6 +10,9 @@ async function getAllSeatsByEventIdDatabase(id: string) {
     let event = await prisma.seat.findMany({
         where: {
             eventId: id
+        },
+        orderBy: {
+            name: 'asc'
         }
     })
     if (event) {
@@ -47,7 +50,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return;
 }
 
-export async function getAllSeatsByEvenId(id: string | string[]) {
+export async function getAllSeatsByEventId(id: string | string[]) {
     let parseId = id
     if (Array.isArray(parseId)) {
         parseId = parseId.join()

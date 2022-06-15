@@ -3,13 +3,17 @@ import { getToken } from "next-auth/jwt"
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { DateTime } from "luxon";
 import { IEventsDTO } from "../../../utils/DTO/eventDTO";
-import { prisma } from "../../../utils/prisma";
+import prisma from "../../../utils/prisma";
 import { getSession } from "next-auth/react";
 
 const secret = process.env.NEXTAUTH_SECRET
 
 async function getAllEventsDatabase() {
-    let events = await prisma.event.findMany();
+    let events = await prisma.event.findMany({
+        orderBy: {
+            dateStart: 'asc'
+        }
+    });
     const data: IEventsDTO[] = events.map(function (x) {
         const y = {
             ...x,

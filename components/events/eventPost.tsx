@@ -1,3 +1,4 @@
+import { Seat } from '@prisma/client';
 import { DateTime } from 'luxon'
 import Link from "next/link";
 import capitalizeFirstLetter from "../../utils/capitalize";
@@ -6,9 +7,10 @@ import { IEventsDTO } from "../../utils/DTO/eventDTO";
 interface eventPost {
   props: IEventsDTO
   frontpage: boolean
+  seat?: Seat
 }
 
-export default function EventPost({ props, frontpage }: eventPost) {
+export default function EventPost({ props, frontpage, seat }: eventPost) {
   return (
     <div className="container px-4 mx-auto">
       <div className="flex flex-wrap -m-6">
@@ -24,7 +26,10 @@ export default function EventPost({ props, frontpage }: eventPost) {
               <a className="inline-block pt-4 text-2xl text-white hover:text-gray-100 font-bold border-t border-lime-400" href={`events/${props.id}`}>{props.name}</a>
             </div>
             <a className="px-14 pb-5 inline-block text-sm text-gray-300">{`${capitalizeFirstLetter(DateTime.fromISO(props.dateStart).setLocale('da').toLocal().toFormat('DDDD'))} - ${capitalizeFirstLetter(DateTime.fromISO(props.dateEnd).setLocale('da').toLocal().toFormat('DDDD'))}`}</a>
-
+            {seat ? <>
+              <br></br>
+              <a className="px-14 pb-5 inline-block text-sm text-gray-300"><strong>Du har sæde {seat.name}</strong></a>
+            </> : <></>}
           </div>
         </div>
       </div>

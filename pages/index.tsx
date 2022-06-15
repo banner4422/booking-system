@@ -15,7 +15,7 @@ export const getStaticProps: GetStaticProps = async () => {
   return {
     props: {
       events: eventsData
-    }, revalidate: 60 * 60
+    }, revalidate: 1
   }
 }
 
@@ -70,9 +70,7 @@ export default function Home({ events }: { events: IEventsDTO[] }) {
                 </h1>
                 {session ?
                   <><p className="mt-3 text-base text-gray-400 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                    Velkommen {session.user?.name} {session.id}
-                    <br />
-                    {status}
+                    Velkommen {session.user?.name}
                   </p>
                   </>
                   :
@@ -88,7 +86,7 @@ export default function Home({ events }: { events: IEventsDTO[] }) {
                     <>
                       <div className="rounded-md shadow">
                         <a
-                          href=""
+                          href={`/events/${events[0].id}`}
                           className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-black bg-lime-300 hover:bg-lime-400 hover:text-black md:py-4 md:text-lg md:px-10"
                         >
                           Tjek næste event
