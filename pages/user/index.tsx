@@ -9,7 +9,7 @@ import { getEventsForUser } from "../api/events/[id]";
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const userSessionData = await getSession(context);
   const eventsData = await getEventsForUser(userSessionData!.id as string);
-  console.log(eventsData)
+
   return {
     props: {
       events: eventsData
